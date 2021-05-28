@@ -19,7 +19,7 @@ public class PersonDAO {
     }
 
     public List<Person> index() {
-        return jdbcTemplate.query("SELECT * FROM person", )
+        return jdbcTemplate.query("SELECT * FROM person", new PersonMapper());
     }
 
     public Person show(int id) {
