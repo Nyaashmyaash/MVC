@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -23,29 +22,8 @@ public class PersonDAO {
     }
 
     public Person show(int id) {
-        Person person = null;
-
-        try {
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement("SELECT * FROM person WHERE id=?");
-
-            preparedStatement.setInt(1, id);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            resultSet.next();
-
-            person = new Person();
-            person.setId(resultSet.getInt("id"));
-            person.setName(resultSet.getString("name"));
-            person.setAge(resultSet.getInt("age"));
-            person.setEmail(resultSet.getString("email"));
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return person;
+        return jdbcTemplate.query("SELECT * FROM person WHERE id=?",
+                new Object[]{id}, new PersonMapper()).stream().findAny().orElse(null);
     }
 
     public void save(Person person) {
